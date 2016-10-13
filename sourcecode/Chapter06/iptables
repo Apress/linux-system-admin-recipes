@@ -1,0 +1,10 @@
+iptables -A INPUT -d 127.0.0.0/255.0.0.0 -i ! lo -p tcp -j DROP 
+iptables -A INPUT -d 192.168.100.25 -m state --state RELATED,ESTABLISHED -j ACCEPT 
+iptables -A INPUT -i lo -j ACCEPT 
+iptables -A INPUT -s 192.168.100.0/255.255.255.0 -d 192.168.100.25 -j ACCEPT 
+iptables -A INPUT -d 192.168.100.25 -p tcp -m tcp --dport 22 -j LOG --log-prefix "ssh:" 
+iptables -A INPUT -d 192.168.100.25 -p tcp -m tcp --dport 22 -j ACCEPT 
+iptables -P INPUT DROP 
+iptables -P FORWARD DROP 
+iptables -P OUTPUT ACCEPT 
+

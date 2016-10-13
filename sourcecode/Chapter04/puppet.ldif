@@ -1,0 +1,14 @@
+dn: cn=server1,ou=Hosts,dc=example,dc=com 
+add: objectClass 
+objectClass: puppetClient 
+- 
+add: puppetclass 
+puppetclass: server 
+ 
+dn: cn=desktop1,ou=Hosts,dc=example,dc=com 
+add: objectClass 
+objectClass: puppetClient 
+- 
+add: puppetclass 
+puppetclass: desktop 
+

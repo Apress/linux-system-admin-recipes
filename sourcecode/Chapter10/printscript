@@ -1,0 +1,15 @@
+#!/bin/bash 
+if [ $# != 1 ]; then 
+  echo "Script to install all printers and set default printer." 
+  echo "Usage: $0 defaultprinter" 
+  exit 1; 
+fi 
+defaultprinter=$1 
+
+lpadmin -p print1 -L "Room 43" -D "HP LaserJet 4350" -P /usr/share/cups/model/hpijs/HP/HP-LaserJet_4350-hpijs.ppd.gz -v  lpd://print1.example.com/print1 -E 
+lpadmin -p print2 -L "Room 243" -D "HP LaserJet 4350" -P /usr/share/cups/model/hpijs/HP/HP-LaserJet_4350-hpijs.ppd.gz -v lpd://print2.example.com/print2 -E 
+lpoptions -p print1 -o Duplex=DuplexNoTumble -o PageSize=A4 -o InputSlot=Auto InstalledMemory=Mem4 
+lpoptions -p print2 -o Duplex=DuplexNoTumble -o PageSize=A4 -o InputSlot=Auto InstalledMemory=Mem4 
+lpoptions -d $defaultprinter 
+/etc/init.d/cupsys restart 
+

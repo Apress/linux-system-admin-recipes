@@ -1,0 +1,11 @@
+#!/bin/sh 
+dir="/usr/local/backups/kerberos/" 
+file="kerbdumpfile" 
+server="raidserver:/raid" 
+mntdir="/mnt/" 
+remotedir="server_backups/" 
+mount -t nfs $server $mnt 
+kdb5_util dump $dir$file  
+cp $dir$file $mntdir$remotedir 
+umount $mntdir 
+

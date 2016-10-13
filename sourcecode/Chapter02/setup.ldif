@@ -1,0 +1,25 @@
+# setup.ldif 
+dn: dc=example,dc=com 
+objectclass: organization 
+objectclass: dcObject 
+objectclass: top 
+o: Example Company 
+dc: example 
+description: root entry 
+ 
+dn: ou=people,dc=example,dc=com 
+objectclass: organizationalUnit 
+ou: people 
+description: Users 
+ 
+dn: uid=ldapadm,ou=people,dc=example,dc=com 
+objectClass: inetOrgPerson 
+objectClass: posixAccount 
+objectClass: shadowAccount 
+cn: LDAP admin account 
+uid: ldapadm 
+uidNumber: 1002 
+gidNumber: 100 
+homeDirectory: /etc/ldap 
+loginShell: /bin/false 
+

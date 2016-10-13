@@ -1,0 +1,11 @@
+# Add this section to your Apache2 configuration file
+# to set up Kerberos authenticaion for the /rt directory
+<Location /rt> 
+    # Kerberisation 
+    AuthType KerberosV5 
+    AuthName "Request Tracker" 
+    KrbAuthRealm EXAMPLE.COM 
+    Krb5Keytab /etc/apache2/apache2.keytab 
+    Require valid-user 
+</Location> 
+

@@ -1,0 +1,14 @@
+#!/bin/sh 
+# Script to run automatic Kerberos dump & transfer to slave server 
+ 
+DUMPFILE=/etc/krb5kdc/slave_dump_file 
+RESULT=/etc/krb5kdc/slave_dump_result 
+SLAVE=server2.example.com 
+MAIL=sysadmin@example.com 
+ 
+/usr/sbin/kdb5_util dump $DUMPFILE 
+/usr/sbin/kprop -f $DUMPFILE $SLAVE > $RESULT 
+ 
+if grep -vq SUCCEEDED $RESULT ; then 
+        mail -s "Kerberos replication problem" $MAIL < $RESULT 
+fi 

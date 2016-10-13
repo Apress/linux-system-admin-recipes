@@ -1,0 +1,27 @@
+#!/bin/sh -e 
+ 
+CHKROOTKIT=/usr/sbin/chkrootkit 
+CF=/etc/chkrootkit.conf 
+LOG_DIR=/var/cache/chkrootkit 
+ 
+if [ ! -x $CHKROOTKIT ]; then 
+  exit 0 
+fi 
+ 
+if [ -f $CF ]; then 
+    . $CF 
+fi 
+ 
+if [ "$RUN_DAILY" = "true" ]; then 
+    if [ "$DIFF_MODE" = "true" ]; then 
+        $CHKROOTKIT $RUN_DAILY_OPTS > $LOG_DIR/log.new 2>&1 
+        if [ ! -f $LOG_DIR/log.old ] \ 
+           || ! diff -q $LOG_DIR/log.old $LOG_DIR/log.new > /dev/null 2>&1; then 
+            cat $LOG_DIR/log.new 
+        fi 
+        mv $LOG_DIR/log.new $LOG_DIR/log.old 
+    else 
+        $CHKROOTKIT $RUN_DAILY_OPTS 
+    fi 
+fi 
+

@@ -1,0 +1,8 @@
+AuthName Local Pages 
+AuthType Basic 
+<LIMIT GET POST> 
+    order deny,allow 
+    deny from all 
+    allow from 192.168. 
+</LIMIT> 
+

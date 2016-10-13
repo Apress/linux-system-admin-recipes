@@ -1,0 +1,47 @@
+#!/usr/bin/perl -w  
+# Script to tally up total disk space available and used in local network 
+# JK 25.03.2009 
+ 
+use strict; 
+use Net::LDAPS; 
+ 
+die "Usage: dfscript\n" unless @ARGV == 0; 
+ 
+my ($search) = @ARGV; 
+my $server   = "ldaps://ldap.example.com"; 
+my $cert     = "/etc/ldap/servercert.pem"; 
+my $base     = "dc=example,dc=com"; 
+my $total    = 0; 
+my $used     = 0; 
+
+my $ldap = Net::LDAPS->new( $server, 
+                             verify => 'optional', 
+                             cafile => $cert ) or die $@; 
+my $mesg = $ldap->bind; 
+my $filter = "(objectClass=ipHost)"; 
+$mesg = $ldap->search(  base   => $base, 
+                        filter => $filter, 
+                        attr   => ['cn'], 
+                     ); 
+$mesg->code && die $mesg->error; 
+
+my @entries = $mesg->sorted('cn'); 
+
+foreach my $entry ( @entries ) { 
+    my $machine       = $entry->get_value( 'cn' ); 
+    if ( $machine ) { 
+        open my $info, '-|', "ssh $machine 'df'"  
+            or warn "Can't ssh to $machine"; 
+        while (<$info>) { 
+            if ( /^\/dev/ ) { 
+                my @list = split; 
+                $total += $list[1]; 
+                $used  += $list[2]; 
+            } 
+        } 
+    } 
+} 
+
+$mesg = $ldap->unbind; 
+print "Total is: $total\nUsed is: $used\n"; 
+

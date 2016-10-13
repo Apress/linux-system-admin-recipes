@@ -1,0 +1,42 @@
+#!/usr/bin/perl -w  
+ 
+use strict; 
+use Net::LDAPS; 
+ 
+die "Usage: showdisks machinename\n" 
+unless (@ARGV == 1); 
+ 
+# Get & set values 
+my ($search) = @ARGV; 
+my $server   = "ldaps://ldap.example.com"; 
+my $cert     = "/etc/ldap/servercert.pem"; 
+my $base     = "dc=example,dc=com"; 
+ 
+my $ldap = Net::LDAPS->new( $server, 
+                             verify => 'optional', 
+                             cafile => $cert ) or die $@; 
+my $mesg = $ldap->bind; 
+ 
+my $filter = "(automountInformation=*$search*)"; 
+  
+$mesg = $ldap->search(  base   => $base, 
+                        filter => $filter, 
+                        attr   => ['cn', 'automountInformation'], 
+                     ); 
+
+$mesg->code && die $mesg->error; 
+ 
+my @entries = $mesg->sorted('cn'); 
+ 
+foreach my $entry ( @entries ) { 
+    my $location  = $entry->get_value( 'automountInformation' ); 
+ 
+    my $name       = $entry->get_value( 'cn' ); 
+
+    if ($cn) { 
+        my ($options, $path)= split $automount; 
+        print "$name : $path ($options) \n"; 
+    } 
+} 
+ 
+$mesg = $ldap->unbind; 

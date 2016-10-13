@@ -1,0 +1,59 @@
+#! /bin/sh 
+ 
+PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin 
+ 
+PROGNAME=`basename $0` 
+PROGPATH=`echo $0 | sed -e 's,[\\/][^\\/][^\\/]*$,,'` 
+REVISION=`echo '$Revision: 1 $' | sed -e 's/[^0-9.]//g'` 
+
+process=$1 
+
+. $PROGPATH/utils.sh 
+
+print_usage() { 
+        echo "Usage: $PROGNAME process-to-check" 
+} 
+
+print_help() { 
+        print_revision $PROGNAME $REVISION 
+        echo "" 
+        print_usage 
+        echo "" 
+        echo "This plugin checks if the given process  
+                  is running, using ps and grep." 
+        echo "" 
+        support 
+        exit 0 
+} 
+
+case "$process" in 
+        --help) 
+                print_help 
+               exit 0 
+                ;; 
+        -h) 
+                print_help 
+                exit 0 
+                ;; 
+        --version) 
+        print_revision $PROGNAME $REVISION 
+                exit 0 
+                ;; 
+        -V) 
+                print_revision $PROGNAME $REVISION 
+                exit 0 
+                ;; 
+        *) 
+                processdata=`ps -A | grep $process 2>&1` 
+                status=$? 
+                if test ${status} -ne 0 ; then 
+                        echo Process not found 
+                        exit 2 
+                fi 
+                else  
+                        echo Process running 
+                        exit 0 
+                fi 
+                ;; 
+esac 
+ 

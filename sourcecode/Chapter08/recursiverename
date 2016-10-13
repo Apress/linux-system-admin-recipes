@@ -1,0 +1,36 @@
+#!/bin/bash 
+# JK 24.07.2009 
+if [ -z "$1" ]; then 
+  echo "Usage: $0 {directories-to-iterate over}" 
+  echo "Iterates over all files in directories changing .html to .shtml" 
+  exit 1 
+fi 
+
+cwd="$PWD" 
+arg="$1" 
+
+function rename_recursive() 
+{ 
+   cd "$arg" 
+   for file in `ls`; do 
+      if [ -d "$file" ]; then 
+         rename_recursive "$file" 
+      else 
+         if [[ "$file" =~ .*\.html ]]; then 
+           oldname="`basename $file`" 
+           newname="`basename $file .html`.shtml" 
+           mv "$file" "$newname" 
+         fi 
+      fi 
+   done 
+   cd .. 
+} 
+
+for dir in $@; do 
+   rename_recursive "$dir" 
+done 
+
+cd "$cwd" 
+exit 0 
+ 
+

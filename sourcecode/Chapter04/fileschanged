@@ -1,0 +1,16 @@
+#!/bin/bash 
+# Script to find and mail total size of files altered in the last 24 hrs 
+# JK 25.03.2009 
+ 
+TOTAL=0 
+HOST=`hostname` 
+EMAIL="juliet@example.com" 
+for FILE in `find / -mount -mtime -1`; do 
+    SIZE=`stat -c %s $FILE` 
+    TOTAL=$(($TOTAL+$SIZE)) 
+done 
+MESSAGE="/tmp/changemsg.txt" 
+echo "Size of files changed in last 24 hrs: $TOTAL bytes" > $MESSAGE 
+/usr/bin/mail -s "Filechange on $HOST" "$EMAIL" < $MESSAGE 
+rm $MESSAGE 
+

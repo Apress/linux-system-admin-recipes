@@ -1,0 +1,26 @@
+#!/usr/bin/perl -w  
+# Script to tally up total disk space available and used in local network 
+# JK 25.03.2009 
+ 
+use strict; 
+
+die "Usage: dfscript\n" unless @ARGV == 0; 
+ 
+my $total    = 0; 
+my $used     = 0; 
+my @machines = qw/ client1 client2 server1 server2 /; 
+
+foreach my $machine ( @machines ) { 
+        open my $info, '-|', "ssh $machine 'df'"  
+            or warn "Can't ssh to $machine"; 
+        while (<$info>) { 
+            if ( /^\/dev/ ) { 
+                my @list = split; 
+                $total += $list[1]; 
+                $used  += $list[2]; 
+            } 
+        } 
+} 
+
+print "Total is: $total\nUsed is: $used\n"; 
+

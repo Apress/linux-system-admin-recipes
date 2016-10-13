@@ -1,0 +1,12 @@
+#!/bin/bash 
+export PATH=/usr/bin;/usr/sbin;/bin;/sbin 
+hostname=`hostname` 
+date=`date +%Y%m%d-%H%M` 
+local="/root/.bashrc" 
+central="/shared/config/root.bashrc" 
+diff=`diff -q $local $central` 
+if  [ $diff != "" ] ; then  
+   cp $central $central.$date.$hostname 
+   cp $local $central  
+fi 
+

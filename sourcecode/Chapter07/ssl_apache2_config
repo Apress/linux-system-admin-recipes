@@ -1,0 +1,41 @@
+# Add this section to your config to set up SSL (see Recipe 7-4)
+# ================================================= 
+# SSL/TLS settings 
+# ================================================= 
+NameVirtualHost *:443 
+ 
+<VirtualHost *.443> 
+ 
+        DocumentRoot "/local/www/ssl_html" 
+ 
+        SSLEngine on 
+        SSLOptions +StrictRequire 
+ 
+        <Directory /> 
+                SSLRequireSSL 
+        </Directory> 
+ 
+        SSLProtocol -all +TLSv1 +SSLv3 
+        SSLCipherSuite HIGH:MEDIUM:!aNULL:+SHA1:+MD5:+HIGH:+MEDIUM 
+ 
+        SSLRandomSeed startup file:/dev/urandom 1024 
+        SSLRandomSeed connect file:/dev/urandom 1024 
+ 
+        SSLSessionCache shm:/usr/local/apache2/logs/ssl_cache_shm 
+        SSLSessionCacheTimeout 600 
+        SSLCertificateFile /etc/apache2/ssl/server.crt 
+        SSLCertificateKeyFile /etc/apache2/ssl/server.key 
+ 
+        SSLVerifyClient none 
+        SSLProxyEngine off 
+ 
+        <IfModule mime.c> 
+                AddType application/x-x509-ca-cert      .crt 
+                AddType application/x-pkcs7-crl         .crl 
+        </IfModule> 
+ 
+        SetEnvIf User-Agent ".*MSIE.*" \ 
+          nokeepalive ssl-unclean-shutdown \ 
+          downgrade-1.0 force-response-1.0 
+</VirtualHost> 
+

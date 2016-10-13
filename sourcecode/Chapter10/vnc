@@ -1,0 +1,12 @@
+service vnc 
+{ 
+      disable = no 
+      socket-type   = stream 
+      protocol      = tcp 
+      group       = tty 
+      wait          = no 
+      user          = nobody 
+      server = /usr/bin/Xvnc 
+      server_args   = -inetd -query localhost -geometry 1024x768 -depth 16 -once -fp unix/:7100 -securitytypes=none 
+} 
+

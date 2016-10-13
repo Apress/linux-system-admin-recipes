@@ -1,0 +1,15 @@
+#!/bin/bash 
+dir="/usr/local/backups/" 
+remotedir="/shared/raid/server_backups" 
+dbdir="/var/lib/ldap/" 
+ldap="ldap/" 
+ldapdir="$dir$ldap" 
+filename="database" 
+num=`date +%Y%m%d` 
+/etc/init.d/slapd stop > /dev/null 
+cp -r $dbdir $dir 
+/usr/sbin/slapcat -l ${ldapdir}${filename}${num}.ldif 
+/etc/init.d/slapd start > /dev/null 
+find $ldapdir -mtime +14 | xargs rm -- 
+cp $ldapdir/* $remotedir 
+

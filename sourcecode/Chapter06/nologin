@@ -1,0 +1,19 @@
+#!/bin/sh 
+# Script to disallow remote login - set as shell in /etc/passwd 
+# JK 03.04.2009 
+command=$2 
+if (expr "$command" : 'rsync ..server .* .raid' > /dev/null) 
+    then 
+        if (expr "$command" : '.*;' > /dev/null) 
+        then 
+            exit 
+        else 
+           /bin/sh "$@" 
+        fi 
+    else 
+        echo "***********************************" 
+        echo "*        No login allowed!        *" 
+        echo "***********************************" 
+        exit 
+    fi 
+

@@ -1,0 +1,10 @@
+_ldapcomplete() { 
+   COMPREPLY=() 
+   cur=${COMP_WORDS[COMP_CWORD]} 
+   output=`ldapsearch -Q "(&(cn=$cur*) (objectClass=ipHost))" cn | grep ^cn:` 
+   name=${output#* } 
+   COMPREPLY=( ${COMPREPLY[@]} $name ) 
+  return 0 
+} 
+
+complete -F _ldapcomplete ssh 

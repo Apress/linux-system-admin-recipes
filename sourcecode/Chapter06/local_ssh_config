@@ -1,0 +1,18 @@
+# Add these lines to ~/.ssh/config
+Host * 
+Protocol 2 
+ServerAliveInterval 60
+
+Host ssh.example.com 
+IdentityFile ~/.ssh/example_id_rsa 
+
+Host longname.machine.example.com 
+HostName lmach 
+User julietkemp-longname
+
+Host desktop.example.com 
+ForwardX11Trusted yes 
+ 
+Host * 
+ForwardX11 yes 
+
